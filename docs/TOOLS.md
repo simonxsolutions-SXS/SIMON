@@ -87,7 +87,7 @@ Scans **all conversations** for recent messages. iMessage and SMS. Names resolve
 ```
 [2026-03-14 11:16:58] [iMessage] Jane Smith: Ok that's fine
 [2026-03-14 11:16:55] [iMessage] Jane Smith: lol
-[2026-03-14 09:15:00] [iMessage] Luis: Sounds good
+[2026-03-14 09:15:00] [iMessage] Me: Sounds good
 ```
 
 **Example response:**
@@ -282,7 +282,7 @@ Searches the local KB memory for stored facts.
 **When used:** "What do you remember about my trading?" / "Do you know my doctor's name?" / "What have I told you about my schedule?"
 
 **Example response:**
-> "Trading — you use thinkorswim for options and forex."
+> "Trading — you use your preferred trading platform for options and forex."
 
 ---
 

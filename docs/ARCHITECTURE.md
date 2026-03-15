@@ -137,7 +137,7 @@ S.I.M.O.N. is a single-machine system with four major layers:
 ┌────────────────────────────────────┐
 │  HUD switches to LISTENING state   │
 │  Waveform activates (green)        │
-│  Awaiting Luis response            │
+│  Awaiting user response            │
 └────────────────────────────────────┘
 ```
 
@@ -208,11 +208,11 @@ Tools that need to write to Apple apps (send message, create event) use AppleScr
 
 | Agent | Schedule | Purpose |
 |---|---|---|
-| `com.simonx.simon` | On login + crash-restart | Keep S.I.M.O.N. running |
-| `com.simonx.healthcheck.morning` | 7:45 AM | Morning system report |
-| `com.simonx.healthcheck.afternoon` | 3:00 PM | Afternoon system report |
-| `com.simonx.healthcheck.evening` | 9:00 PM | Evening system report |
-| `com.simonx.healthcheck.catchup` | On login | Catch missed checks after sleep/reboot |
+| `com.yourname.simon` | On login + crash-restart | Keep S.I.M.O.N. running |
+| `com.yourname.healthcheck.morning` | 7:45 AM | Morning system report |
+| `com.yourname.healthcheck.afternoon` | 3:00 PM | Afternoon system report |
+| `com.yourname.healthcheck.evening` | 9:00 PM | Evening system report |
+| `com.yourname.healthcheck.catchup` | On login | Catch missed checks after sleep/reboot |
 
 ---
 
@@ -245,8 +245,8 @@ Every session starts with all `memory` table entries injected into the system pr
 ```
 PERSISTENT MEMORY (stored locally, survives all restarts):
 [person] wife_contact: [name from contacts]
-[preference] trading_platform: thinkorswim (options and forex)
-[fact] macbook_specs: MacBook Air M5, 24GB RAM, 1TB
+[preference] trading_platform: your preferred platform
+[fact] machine_specs: MacBook Air, 24GB RAM, 1TB
 ...
 ```
 

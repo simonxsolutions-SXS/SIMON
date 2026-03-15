@@ -68,12 +68,13 @@ Returns unread email counts per account.
 **Response:**
 ```json
 {
-  "simonx": 45,
-  "personal": 347,
-  "fixit": 13,
-  "icloud": 0
+  "Work": 12,
+  "Personal": 45,
+  "iCloud": 0
 }
 ```
+
+> Account names are returned as-is from Mail.app — they match whatever your accounts are named in Mail preferences.
 
 ---
 

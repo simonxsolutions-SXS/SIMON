@@ -1,6 +1,12 @@
 {
-  "ollama_cloud_url": "https://api.ollama.com",
-  "ollama_cloud_key": "YOUR_OLLAMA_API_KEY_HERE",
-  "model": "mistral-large",
-  "port": 8765
+  "ollama_cloud_url": "http://localhost:11434",
+  "ollama_cloud_key": "ollama",
+  "model": "mistral",
+  "port": 8765,
+  "owner_name": "Your Name",
+  "owner_first": "Alex",
+  "owner_title": "Mr.",
+  "company": "Your Company",
+  "notification_phone": "+1XXXXXXXXXX",
+  "city": "Your City"
 }

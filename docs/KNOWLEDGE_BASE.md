@@ -126,8 +126,8 @@ CREATE TABLE memory (
 ```
 PERSISTENT MEMORY (stored locally, survives all restarts):
 [person] wife_contact: Jane
-[preference] trading_platform: thinkorswim (options and forex)
-[fact] macbook_specs: MacBook Air M5, 24GB RAM, 1TB
+[preference] trading_platform: your preferred platform
+[fact] machine_specs: MacBook Air, 24GB RAM, 1TB
 ```
 
 **Via voice:**
