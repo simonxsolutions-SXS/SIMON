@@ -13,3 +13,7 @@ voices/*.onnx.json
 jarvis.log
 launchd_simon.log
 hud.html.*.bak
+
+# Word documents (may contain personal data)
+*.docx
+.DS_Store

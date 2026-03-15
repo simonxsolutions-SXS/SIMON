@@ -12,7 +12,7 @@ Open at: `http://localhost:8765`
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│  S.I.M.O.N. // SIMON-X          11:30:45          ONLINE  USER  │
+│  S.I.M.O.N. // SYSTEMS INTEL.    11:30:45          ONLINE  USER  │
 │  SYSTEMS INTELLIGENCE...        Saturday, March 14, 2026        │
 ├──────────────┬───────────────────────────────────┬──────────────┤
 │ // SYSTEM    │                                   │ // TODAY     │
