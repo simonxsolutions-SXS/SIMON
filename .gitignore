@@ -1,0 +1,15 @@
+config.json
+*.log
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+voices/*.onnx
+voices/*.onnx.json
+.env
+*.db
+*.db-wal
+*.db-shm
+jarvis.log
+launchd_simon.log
+hud.html.*.bak

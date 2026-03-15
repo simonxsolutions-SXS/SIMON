@@ -1,0 +1,6 @@
+{
+  "ollama_cloud_url": "https://api.ollama.com",
+  "ollama_cloud_key": "YOUR_OLLAMA_API_KEY_HERE",
+  "model": "mistral-large",
+  "port": 8765
+}
