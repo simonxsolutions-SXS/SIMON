@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<!-- S.I.M.O.N. v4.2 HUD | https://github.com/simonxsolutions-SXS/SIMON -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>S.I.M.O.N.</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --a:#00d4ff;--b:#00ffe7;--g:#00ff80;--gold:#ffd060;--red:#ff3355;
+  --bg:#020a12;--panel:rgba(0,12,24,.88);--border:rgba(0,212,255,.13);
+}
+body{
+  background:var(--bg);color:var(--a);
+  font-family:'Share Tech Mono',monospace;
+  height:100vh;overflow:hidden;
+  display:grid;
+  grid-template-columns:255px 1fr 255px;
+  grid-template-rows:52px 1fr 78px;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,212,255,.025) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+/* ── TOP BAR ── */
+#top{
+  grid-column:1/-1;display:flex;align-items:center;
+  justify-content:space-between;padding:0 20px;
+  background:rgba(0,2,8,.98);
+  border-bottom:1px solid rgba(0,212,255,.1);z-index:10;
+  position:relative;
+}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:11px;letter-spacing:5px;}
+.logo em{color:var(--gold);font-style:normal;}
+.tagline{font-size:7px;color:rgba(0,212,255,.28);letter-spacing:2px;margin-top:2px;}
+/* Clock: truly centered via absolute — unaffected by left/right element widths */
+#top-clock{
+  position:absolute;left:50%;transform:translateX(-50%);
+  text-align:center;pointer-events:none;
+}
+#clock{font-family:'Orbitron',sans-serif;font-size:22px;color:var(--b);
+  text-shadow:0 0 14px rgba(0,255,231,.4);letter-spacing:3px;}
+#dateline{font-size:8px;color:rgba(0,212,255,.45);text-align:center;margin-top:2px;letter-spacing:1px;}
+.pill{
+  font-size:8px;padding:3px 10px;border:1px solid rgba(0,212,255,.22);
+  border-radius:20px;color:rgba(0,212,255,.4);letter-spacing:1px;transition:all .4s;
+}
+.pill.on{border-color:rgba(0,255,231,.65);color:var(--b);box-shadow:0 0 8px rgba(0,255,231,.18);}
+.topright{display:flex;align-items:center;gap:11px;}
+.usr{font-size:8px;color:rgba(0,212,255,.3);letter-spacing:1px;}
+
+/* ── SIDE PANELS ── */
+.side{
+  padding:10px;
+  display:flex;flex-direction:column;gap:8px;
+  z-index:5;overflow-y:auto;
+  background:rgba(0,5,15,.92);
+  align-self:stretch;
+}
+.panel{
+  background:rgba(0,18,35,.95);border:1px solid rgba(0,212,255,.22);
+  border-radius:3px;padding:12px;backdrop-filter:blur(6px);
+  box-shadow:inset 0 0 20px rgba(0,212,255,.03);
+}
+/* Every side column fills its grid row completely */
+.side{height:100%;}
+/* Last panel in each column grows to fill remaining height */
+.side > .panel:last-child{flex:1;overflow-y:auto;min-height:0;}
+
+/* RIGHT SIDE — Matrix green theme */
+#right-side{color:#00ff41;}
+#right-side .plbl{color:rgba(0,255,65,.7);border-bottom-color:rgba(0,255,65,.2);text-shadow:0 0 6px rgba(0,255,65,.35);}
+#right-side .cal-empty,
+#right-side .cal-item{color:rgba(0,255,65,.85);border-color:rgba(0,255,65,.18);background:rgba(0,255,65,.04);}
+#right-side .cal-time{color:#39ff14;}
+#right-side .hint{color:rgba(0,255,65,.7);}
+#right-side #alog{color:rgba(0,255,65,.65);}
+#right-side .panel{border-color:rgba(0,255,65,.22);}
+.plbl{
+  font-size:8px;letter-spacing:3px;color:rgba(0,212,255,.65);
+  margin-bottom:8px;border-bottom:1px solid rgba(0,212,255,.15);
+  padding-bottom:5px;text-shadow:0 0 6px rgba(0,212,255,.3);
+}
+
+/* Vitals */
+.metric{margin-bottom:9px;}
+.mrow{font-size:11px;color:rgba(0,212,255,.85);display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;letter-spacing:.5px;}
+.mrow span:first-child{color:rgba(0,212,255,.6);font-size:10px;letter-spacing:2px;}
+.mrow span:last-child{color:#00ffe7;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;text-shadow:0 0 8px rgba(0,255,231,.5);}
+.bar{height:3px;background:rgba(0,212,255,.08);border-radius:2px;overflow:hidden;}
+.fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--a),var(--b));transition:width 1.4s ease;box-shadow:0 0 6px rgba(0,212,255,.4);}
+.fill.hot{background:linear-gradient(90deg,#ff3050,#ff8090);box-shadow:0 0 6px rgba(255,48,80,.5);}
+
+/* Inbox */
+.erow{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:rgba(0,212,255,.75);padding:5px 0;border-bottom:1px solid rgba(0,212,255,.1);}
+.enum{font-family:'Orbitron',sans-serif;font-size:14px;color:var(--gold);font-weight:700;text-shadow:0 0 8px rgba(255,208,96,.5);}
+
+/* Systems */
+.srow{font-size:10px;color:rgba(0,212,255,.78);padding:4px 0;display:flex;align-items:center;gap:7px;letter-spacing:.3px;}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.dot.g{background:var(--g);box-shadow:0 0 5px var(--g);animation:dp 2.5s ease-in-out infinite;}
+.dot.y{background:var(--gold);box-shadow:0 0 5px var(--gold);}
+.dot.r{background:var(--red);box-shadow:0 0 4px var(--red);}
+@keyframes dp{0%,100%{opacity:.55;}50%{opacity:1;}}
+
+/* Wake sensitivity slider */
+.slider-wrap{margin-top:6px;}
+.slider-label{display:flex;justify-content:space-between;font-size:9px;color:rgba(0,212,255,.45);margin-bottom:3px;}
+input[type=range]{width:100%;accent-color:var(--a);cursor:pointer;height:3px;}
+.slider-ends{display:flex;justify-content:space-between;font-size:8px;color:rgba(0,212,255,.3);margin-top:1px;}
+
+/* Calendar */
+.cal-item{padding:6px 9px;background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.15);border-radius:2px;margin-bottom:5px;font-size:10px;line-height:1.7;color:rgba(0,212,255,.85);}
+.cal-time{color:var(--gold);font-size:9px;font-family:'Orbitron',sans-serif;}
+.cal-empty{font-size:10px;color:rgba(0,212,255,.45);}
+
+/* Voice commands hint */
+.hint{font-size:10px;color:rgba(0,212,255,.65);line-height:2.5;}
+
+/* Activity log — fills its panel, shows real console data */
+#alog{
+  font-size:9px;
+  line-height:1.6;
+  overflow-y:auto;
+  flex:1;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(0,255,65,.15) transparent;
+  font-family:'Share Tech Mono',monospace;
+}
+
+/* ── CENTER ── */
+#center{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;
+  z-index:5;
+  align-self:stretch;
+  width:100%;
+  min-width:0;
+  gap:0;
+  padding:4px 0 10px;
+  overflow:hidden;
+}
+/* Brain cluster — sits at top, compact gap */
+#brain-cluster{
+  display:flex;flex-direction:column;
+  align-items:center;gap:4px;
+  flex:0 0 auto;
+  width:100%;
+}
+/* Chat anchors immediately below brain cluster */
+#chat-cluster{
+  display:flex;flex-direction:column;
+  align-items:center;gap:3px;
+  width:100%;flex:0 0 auto;
+  margin-top:4px;
+}
+
+/* Brain canvas — large, centered */
+#brain-wrap{
+  position:relative;
+  width:720px;height:590px;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+#brainCanvas{position:absolute;inset:0;}
+
+#status-txt{
+  font-family:'Orbitron',sans-serif;font-size:9px;letter-spacing:4px;
+  color:var(--b);text-shadow:0 0 8px rgba(0,255,231,.35);
+}
+
+/* ── PROCESSING OVERLAY — shown while SIMON runs tools ── */
+#proc-overlay{
+  display:none;
+  position:fixed;bottom:88px;left:50%;transform:translateX(-50%);
+  z-index:50;pointer-events:none;
+  flex-direction:column;align-items:center;gap:8px;
+}
+#proc-overlay.active{display:flex;}
+#proc-bar-wrap{
+  width:420px;height:2px;background:rgba(0,212,255,.08);
+  border-radius:2px;overflow:hidden;
+}
+#proc-bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,var(--a),var(--b),var(--a));
+  background-size:200% 100%;
+  animation:procscroll 1.4s linear infinite, procgrow 18s ease-out forwards;
+  box-shadow:0 0 8px rgba(0,212,255,.6);
+}
+@keyframes procscroll{0%{background-position:100% 0}100%{background-position:-100% 0}}
+@keyframes procgrow{0%{width:4%}60%{width:72%}90%{width:88%}100%{width:92%}}
+#proc-label{
+  font-family:'Share Tech Mono',monospace;font-size:9px;
+  color:rgba(0,212,255,.7);letter-spacing:2px;
+  text-shadow:0 0 6px rgba(0,212,255,.4);
+}
+#proc-dots::after{
+  content:'';
+  animation:dots 1.2s steps(4,end) infinite;
+}
+@keyframes dots{
+  0%{content:''} 25%{content:'.'} 50%{content:'..'} 75%{content:'...'} 100%{content:''}}
+/* Spinner ring for tool calls */
+#proc-ring{
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid rgba(0,212,255,.12);
+  border-top:2px solid var(--b);
+  animation:spin 0.8s linear infinite;
+  box-shadow:0 0 10px rgba(0,255,231,.25);
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+#wake-hint{font-size:9px;color:rgba(0,212,255,.28);letter-spacing:1px;height:14px;transition:color .3s;}
+#wake-hint.conv{color:rgba(0,255,180,.55);}
+#interim-txt{
+  font-size:9px;color:rgba(0,255,180,.52);font-style:italic;
+  height:14px;max-width:440px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;text-align:center;
+}
+
+/* Waveform */
+#wave{display:flex;align-items:center;gap:2px;height:20px;}
+.wb{width:2px;border-radius:1px;background:rgba(0,212,255,.25);height:3px;transition:height .08s,background .18s;}
+
+/* Chat */
+#chat{
+  width:100%;max-width:560px;max-height:200px;
+  overflow-y:auto;padding:0 4px;
+  scrollbar-width:thin;scrollbar-color:rgba(0,212,255,.1) transparent;
+}
+.msg{padding:6px 10px;margin-bottom:4px;border-radius:3px;font-size:11px;line-height:1.6;animation:fi .2s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(3px);}}
+.msg.u{background:rgba(0,55,95,.32);border-left:2px solid rgba(0,212,255,.6);color:rgba(255,255,255,.8);}
+.msg.u::before{content:'LUIS  ';color:var(--a);font-size:7px;letter-spacing:2px;display:block;margin-bottom:2px;}
+.msg.a{background:rgba(0,28,48,.48);border-left:2px solid rgba(0,255,231,.55);color:rgba(195,240,255,.88);}
+.msg.a::before{content:'S.I.M.O.N.  ';color:var(--b);font-size:7px;letter-spacing:2px;display:block;margin-bottom:2px;}
+.cursor{display:inline-block;width:6px;height:10px;background:var(--b);animation:blink .55s step-end infinite;vertical-align:middle;margin-left:2px;}
+@keyframes blink{50%{opacity:0;}}
+.tool-indicator{color:#f5a623;font-size:10px;font-style:italic;}
+
+/* ── BOTTOM BAR ── */
+#bottom{
+  grid-column:1/-1;display:flex;align-items:center;gap:9px;padding:0 20px;
+  background:rgba(0,2,8,.98);border-top:1px solid rgba(0,212,255,.1);z-index:10;
+}
+#inp{
+  flex:1;background:rgba(0,10,22,.9);border:1px solid rgba(0,212,255,.16);
+  border-radius:3px;color:#fff;font-family:'Share Tech Mono',monospace;
+  font-size:12px;padding:7px 13px;outline:none;transition:border-color .2s;
+}
+#inp:focus{border-color:var(--a);}
+#inp::placeholder{color:rgba(0,212,255,.18);}
+.btn{
+  font-family:'Orbitron',sans-serif;font-size:7px;letter-spacing:2px;
+  padding:7px 12px;background:transparent;
+  border:1px solid rgba(0,212,255,.2);border-radius:3px;
+  color:var(--a);cursor:pointer;white-space:nowrap;transition:all .2s;
+}
+.btn:hover{background:rgba(0,212,255,.05);border-color:var(--a);}
+.btn.accent{border-color:rgba(0,255,231,.35);color:var(--b);}
+.btn.danger{border-color:rgba(255,60,80,.35);color:#ff6070;}
+#lpill{
+  font-size:8px;padding:5px 12px;border:1px solid rgba(0,212,255,.2);
+  border-radius:20px;color:rgba(0,212,255,.42);
+  min-width:120px;text-align:center;letter-spacing:1px;transition:all .3s;
+}
+#lpill.wake{border-color:rgba(0,180,255,.45);color:#00b4ff;}
+#lpill.listen{border-color:rgba(0,255,100,.6);color:var(--g);box-shadow:0 0 8px rgba(0,255,100,.15);}
+#lpill.think{border-color:rgba(255,200,0,.45);color:var(--gold);}
+#lpill.speak{border-color:rgba(80,180,255,.45);color:#80c8ff;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="top">
+  <div>
+    <div class="logo">S.I.M.O.N. &nbsp;<em>//</em>&nbsp; SYSTEMS INTELLIGENCE</div>
+    <div class="tagline">SYSTEMS INTELLIGENCE &amp; MANAGEMENT OPERATIONS NODE</div>
+  </div>
+  <div id="top-clock">
+    <div id="clock">--:--:--</div>
+    <div id="dateline">...</div>
+  </div>
+  <div class="topright">
+    <div class="pill" id="cpill">CONNECTING</div>
+    <div class="usr">LUIS MIRANDA</div>
+  </div>
+</div>
+
+<!-- LEFT PANEL -->
+<div class="side">
+  <div class="panel">
+    <div class="plbl">// SYSTEM VITALS</div>
+    <div class="metric">
+      <div class="mrow"><span>CPU</span><span id="cpu-v">--</span></div>
+      <div class="bar"><div class="fill" id="cpu-b" style="width:0"></div></div>
+    </div>
+    <div class="metric">
+      <div class="mrow"><span>MEMORY</span><span id="mem-v">--</span></div>
+      <div class="bar"><div class="fill" id="mem-b" style="width:0"></div></div>
+    </div>
+    <div class="metric">
+      <div class="mrow"><span>DISK</span><span id="disk-v">--</span></div>
+      <div class="bar"><div class="fill" id="disk-b" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="plbl">// INBOX</div>
+    <div class="erow"><span id="e-label-1">--</span><span class="enum" id="e-1">--</span></div>
+    <div class="erow"><span>Personal</span><span class="enum" id="e-gm">--</span></div>
+    <div class="erow"><span id="e-label-2">--</span><span class="enum" id="e-2">--</span></div>
+    <div class="erow"><span>iCloud</span><span class="enum" id="e-ic">--</span></div>
+  </div>
+
+  <div class="panel">
+    <div class="plbl">// SYSTEMS</div>
+    <div class="srow"><div class="dot g"></div>Ollama Cloud (Mistral Large)</div>
+    <div class="srow"><div class="dot g"></div>MCP Stack (3 servers)</div>
+    <div class="srow"><div class="dot g"></div>Piper TTS (Alan · British)</div>
+    <div class="srow"><div class="dot y"></div>iMessage (Full Disk Access)</div>
+    <div class="srow"><div class="dot g"></div>Health Check · 3x Daily</div>
+    <div class="srow"><div class="dot g"></div>MCP Guard · Watchdog</div>
+    <div style="border-top:1px solid rgba(0,212,255,.1);margin:8px 0"></div>
+    <div class="plbl" style="margin-bottom:6px;margin-top:0">// NETWORK</div>
+    <div class="srow"><div class="dot g"></div>IP: <span id="net-ip" style="margin-left:4px;color:#00ffe7">--</span></div>
+    <div class="srow"><div class="dot g"></div>DNS: Cloudflare 1.1.1.1</div>
+    <div style="border-top:1px solid rgba(0,212,255,.1);margin:8px 0"></div>
+    <div class="plbl" style="margin-bottom:6px;margin-top:0">// SESSION</div>
+    <div class="srow" style="justify-content:space-between"><span>UPTIME</span><span id="uptime-val" style="color:#00ffe7;font-family:'Orbitron',sans-serif;font-size:9px">--</span></div>
+    <div class="srow" style="justify-content:space-between"><span>LOAD AVG</span><span id="load-val" style="color:#00ffe7;font-family:'Orbitron',sans-serif;font-size:9px">--</span></div>
+    <div style="border-top:1px solid rgba(0,212,255,.1);margin:8px 0"></div>
+    <div class="slider-wrap">
+      <div class="slider-label">
+        <span>WAKE SENSITIVITY</span>
+        <span id="thresh-val">0.55</span>
+      </div>
+      <input id="thresh-slider" type="range" min="0" max="1" step="0.05" value="0.55"
+        oninput="wakeThresh=parseFloat(this.value);document.getElementById('thresh-val').textContent=parseFloat(this.value).toFixed(2);sysLog('Wake threshold → '+this.value);">
+      <div class="slider-ends"><span>SENSITIVE</span><span>STRICT</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CENTER -->
+<div id="center">
+  <!-- Brain cluster: brain + status labels -->
+  <div id="brain-cluster">
+    <div id="brain-wrap" onclick="toggleMute()">
+      <canvas id="brainCanvas" width="720" height="590"></canvas>
+    </div>
+    <div id="status-txt">INITIALIZING</div>
+    <div id="wake-hint">SAY &ldquo;SIMON&rdquo; TO ACTIVATE</div>
+    <div id="interim-txt"></div>
+  </div>
+  <!-- Chat cluster: waveform + chat box -- anchored to bottom -->
+  <div id="chat-cluster">
+    <div id="wave"></div>
+    <div id="chat"></div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="side" id="right-side">
+  <div class="panel">
+    <div class="plbl">// TODAY</div>
+    <div id="cal"><div class="cal-empty">Loading...</div></div>
+  </div>
+  <div class="panel">
+    <div class="plbl">// VOICE COMMANDS</div>
+    <div class="hint">
+      <div>"Simon, calendar today"</div>
+      <div>"Simon, check my email"</div>
+      <div>"Simon, system check"</div>
+      <div>"Simon, text Madeline"</div>
+      <div>"Simon, set a reminder"</div>
+      <div>"Simon, what's my report"</div>
+      <div>"Simon, upcoming events"</div>
+      <div>"Simon, run diagnostics"</div>
+      <div>"Simon, who called me"</div>
+      <div>"Simon, clear session"</div>
+    </div>
+  </div>
+  <div class="panel" style="display:flex;flex-direction:column;min-height:0;">
+    <div class="plbl">// ACTIVITY LOG</div>
+    <div id="alog"></div>
+  </div>
+</div>
+
+<!-- PROCESSING OVERLAY -->
+<div id="proc-overlay">
+  <div id="proc-ring"></div>
+  <div id="proc-label">PROCESSING<span id="proc-dots"></span></div>
+  <div id="proc-bar-wrap"><div id="proc-bar"></div></div>
+</div>
+
+<!-- BOTTOM BAR -->
+<div id="bottom">
+  <div id="lpill">STANDBY</div>
+  <input id="inp" type="text" placeholder="Type a command and press Enter..."
+    onkeydown="if(event.key==='Enter')sendText()">
+  <button class="btn accent" onclick="sendText()">SEND</button>
+  <button class="btn danger" id="mute-btn" onclick="toggleMute()">MUTE</button>
+  <button class="btn" onclick="clearSession()">CLEAR</button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+//  S.I.M.O.N. v4.2 HUD — https://github.com/simonxsolutions-SXS/SIMON
+//  Brain neural canvas + voice + conversation mode + word pulse
+// ═══════════════════════════════════════════════════════════
+
+const WS_URL = `ws://${location.host}/ws/${Date.now()}`;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+const hasSR = !!SR;
+
+// State
+let appState='sleeping', muted=false, ws=null;
+let rec=null, recRunning=false, awake=false, awakeTimer=null, wakeThresh=0.55;
+let conversing=false, convTimer=null;
+let currentAiMsg=null;
+
+// Kill phrases — any of these exit conversation mode
+const KILL_PHRASES=[
+  'give me a second','give me a moment',"i'll be right back",'ill be right back',
+  'stand by','standby',"that's all",'thats all',
+  'go to sleep','stop listening','goodbye simon','goodnight simon'
+];
+
+// ─── WAVEFORM ────────────────────────────────────────────────
+const waveEl=document.getElementById('wave');
+for(let i=0;i<24;i++){const b=document.createElement('div');b.className='wb';waveEl.appendChild(b);}
+setInterval(()=>{
+  document.querySelectorAll('.wb').forEach(b=>{
+    if(appState==='listening'){b.style.height=(4+Math.random()*16)+'px';b.style.background='#00ffe7';}
+    else if(appState==='wake'){b.style.height=(2+Math.random()*5)+'px';b.style.background='rgba(0,212,255,.45)';}
+    else if(appState==='speaking'){b.style.height=(3+Math.random()*10)+'px';b.style.background='rgba(80,180,255,.6)';}
+    else{b.style.height='3px';b.style.background='rgba(0,212,255,.15)';}
+  });
+},110);
+
+// ─── CLOCK ───────────────────────────────────────────────────
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-US',{hour12:false});}
+tick();setInterval(tick,1000);
+
+// ─── STATE MACHINE ───────────────────────────────────────────
+function setState(s){
+  appState=s;
+  const pill=document.getElementById('lpill');
+  const stat=document.getElementById('status-txt');
+  const hint=document.getElementById('wake-hint');
+
+  const labels={sleeping:'STANDBY',wake:'MONITORING',listening:'LISTENING',processing:'PROCESSING',speaking:'SPEAKING',muted:'MUTED'};
+  const pillCls={wake:'wake',listening:'listen',processing:'think',speaking:'speak'};
+  const pillTxt={
+    sleeping:'STANDBY',wake:'MONITORING',
+    listening:'🔴 LISTENING',processing:'⚡ PROCESSING',
+    speaking:'🔊 SPEAKING',muted:'🔇 MUTED'
+  };
+
+  stat.textContent = labels[s] || s.toUpperCase();
+  pill.className   = pillCls[s] || '';
+  pill.textContent = pillTxt[s] || s.toUpperCase();
+
+  // Wake hint text
+  if(s==='sleeping'){
+    hint.textContent='SAY "SIMON" TO ACTIVATE';
+    hint.className='';
+  } else if(s==='wake'){
+    if(conversing){
+      hint.textContent='CONVERSATION MODE — SPEAK FREELY';
+      hint.className='conv';
+    } else {
+      hint.textContent='SAY "SIMON" TO ACTIVATE';
+      hint.className='';
+    }
+  } else if(s==='listening'){
+    hint.textContent='LISTENING...';
+    hint.className='';
+  } else if(s==='muted'){
+    hint.textContent='CLICK BRAIN TO UNMUTE';
+    hint.className='';
+  } else {
+    hint.textContent='';
+    hint.className='';
+  }
+
+  if(s!=='listening') document.getElementById('interim-txt').textContent='';
+  brainSetState(s);
+}
+
+// ─── ACTIVITY LOG — real console interception ───────────────
+// All console.log/warn/error/info now route to the activity log
+// so you see actual system events, WS messages, errors, and SIMON ops.
+const _alog = document.getElementById('alog');
+const _MAX_LOG = 200; // keep last 200 entries
+let _logCount = 0;
+
+const _LEVEL_COLOR = {
+  log:   '#00ff41',   // matrix green
+  info:  '#00d4ff',   // cyan
+  warn:  '#ffd060',   // gold
+  error: '#ff3355',   // red
+  sys:   '#00ffe7',   // bright cyan — SIMON internal
+};
+
+function _writeLog(level, args){
+  if(!_alog) return;
+  const t = new Date().toLocaleTimeString('en-US',{hour12:false});
+  const color = _LEVEL_COLOR[level] || _LEVEL_COLOR.log;
+  const prefix = level==='sys' ? '' : `[${level.toUpperCase()}] `;
+  // Serialize args: objects get JSON.stringify, primitives join as string
+  const msg = args.map(a=>{
+    if(a===null) return 'null';
+    if(a===undefined) return 'undefined';
+    if(typeof a === 'object'){
+      try{ return JSON.stringify(a).slice(0,120); } catch{ return String(a); }
+    }
+    return String(a);
+  }).join(' ').slice(0, 160);
+
+  const line = document.createElement('div');
+  line.style.cssText = `color:${color};border-bottom:1px solid rgba(0,255,65,.06);padding:2px 0;font-size:9px;line-height:1.5;`;
+  line.innerHTML = `<span style="opacity:.5">${t}</span> ${prefix}${msg.replace(/</g,'&lt;').replace(/>/g,'&gt;')}`;
+  _alog.appendChild(line);
+  _logCount++;
+
+  // Prune old entries
+  while(_alog.children.length > _MAX_LOG){
+    _alog.removeChild(_alog.firstChild);
+  }
+  _alog.scrollTop = _alog.scrollHeight;
+}
+
+// Intercept all console methods
+(function(){
+  const _orig = { log:console.log, info:console.info, warn:console.warn, error:console.error };
+  console.log   = function(...a){ _orig.log.apply(console,a);   _writeLog('log',  a); };
+  console.info  = function(...a){ _orig.info.apply(console,a);  _writeLog('info', a); };
+  console.warn  = function(...a){ _orig.warn.apply(console,a);  _writeLog('warn', a); };
+  console.error = function(...a){ _orig.error.apply(console,a); _writeLog('error',a); };
+})();
+
+// Catch unhandled errors
+window.addEventListener('error', e=>{
+  _writeLog('error', [`${e.message} (${e.filename}:${e.lineno})`]);
+});
+window.addEventListener('unhandledrejection', e=>{
+  _writeLog('error', ['Unhandled promise:', String(e.reason)]);
+});
+
+// sysLog now routes through the same system with 'sys' level (bright cyan)
+function sysLog(msg){
+  _writeLog('sys', [msg]);
+}
+
+// ─── BRAIN NEURAL CANVAS ─────────────────────────────────────
+;(function BrainCanvas(){
+  const canvas=document.getElementById('brainCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height, CX=W/2, CY=H/2;
+
+  // 5 clusters — original v4.1 layout (280x230)
+  const NODES=[];
+  const clusters=[
+    {cx:.38,cy:.40,r:.21,n:14},
+    {cx:.62,cy:.40,r:.21,n:14},
+    {cx:.50,cy:.62,r:.15,n:10},
+    {cx:.28,cy:.55,r:.12,n:7},
+    {cx:.72,cy:.55,r:.12,n:7}
+  ];
+  clusters.forEach(cl=>{
+    for(let i=0;i<cl.n;i++){
+      const angle=(Math.PI*2*i/cl.n)+Math.random()*.9;
+      const dist=cl.r*(.3+Math.random()*.7);
+      NODES.push({
+        x:CX+(cl.cx-.5)*W+Math.cos(angle)*dist*W,
+        y:CY+(cl.cy-.5)*H+Math.sin(angle)*dist*H,
+        r:2.5+Math.random()*2,
+        phase:Math.random()*Math.PI*2,
+        speed:.012+Math.random()*.018,
+        active:0
+      });
+    }
+  });
+
+  // Build edges between close nodes
+  const EDGES=[];
+  for(let i=0;i<NODES.length;i++){
+    for(let j=i+1;j<NODES.length;j++){
+      const dx=NODES[i].x-NODES[j].x, dy=NODES[i].y-NODES[j].y;
+      if(Math.sqrt(dx*dx+dy*dy)<80) EDGES.push({a:i,b:j});
+    }
+  }
+
+  const packets=[];
+  function spawnPk(count=1){
+    for(let i=0;i<count;i++){
+      if(EDGES.length) packets.push({e:EDGES[Math.floor(Math.random()*EDGES.length)],t:0,s:.009+Math.random()*.013});
+    }
+  }
+
+  // Color palettes per state
+  const PAL={
+    sleeping: {node:'#004466',edge:'rgba(0,68,100,.18)',glow:'rgba(0,50,80,.5)',pk:'#0088aa'},
+    wake:     {node:'#0077aa',edge:'rgba(0,130,200,.28)',glow:'rgba(0,80,160,.5)',pk:'#00aaff'},
+    listening:{node:'#00bb55',edge:'rgba(0,180,70,.32)',glow:'rgba(0,120,60,.6)',pk:'#00ff88'},
+    processing:{node:'#cc9900',edge:'rgba(200,150,0,.3)',glow:'rgba(140,90,0,.6)',pk:'#ffd060'},
+    speaking: {node:'#2266ee',edge:'rgba(40,120,255,.3)',glow:'rgba(20,80,200,.6)',pk:'#88ccff'},
+    muted:    {node:'#551122',edge:'rgba(80,15,30,.18)',glow:'rgba(60,5,20,.5)',pk:'#ff3355'},
+  };
+
+  let curState='sleeping', actLvl=0.02, wordPulseUntil=0;
+
+  window.brainSetState=s=>{
+    curState=s;
+    actLvl={sleeping:.015,wake:.07,listening:.32,processing:.95,speaking:.65,muted:.01}[s]||.05;
+  };
+
+  // Called on every spoken word chunk — fires packet burst + node flash
+  window.brainWordPulse=()=>{
+    wordPulseUntil=Date.now()+420;
+    spawnPk(8);
+    NODES.forEach(n=>{ if(Math.random()<.18) n.active=Math.min(1,n.active+.6); });
+  };
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const now=Date.now();
+    const pulsing=now<wordPulseUntil;
+    const pal=PAL[curState]||PAL.sleeping;
+    const effAct=pulsing?Math.max(actLvl,.88):actLvl;
+
+    if(Math.random()<effAct*.45) spawnPk();
+    while(packets.length>55) packets.shift();
+
+    // Edges
+    EDGES.forEach(e=>{
+      const na=NODES[e.a], nb=NODES[e.b];
+      ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);
+      ctx.strokeStyle=pal.edge;
+      ctx.lineWidth=.6+(na.active+nb.active)*.4;
+      ctx.stroke();
+    });
+
+    // Packets — glow dot travelling along edges
+    for(let i=packets.length-1;i>=0;i--){
+      const pk=packets[i];
+      pk.t+=pk.s*(0.5+effAct*1.8);
+      if(pk.t>=1){packets.splice(i,1);continue;}
+      const na=NODES[pk.e.a], nb=NODES[pk.e.b];
+      const px=na.x+(nb.x-na.x)*pk.t, py=na.y+(nb.y-na.y)*pk.t;
+      NODES[pk.t<.5?pk.e.a:pk.e.b].active=Math.min(1,NODES[pk.t<.5?pk.e.a:pk.e.b].active+.28);
+
+      // Outer glow
+      const gr=pulsing?14:9;
+      const og=ctx.createRadialGradient(px,py,0,px,py,gr);
+      og.addColorStop(0,pal.pk);og.addColorStop(1,'transparent');
+      ctx.beginPath();ctx.arc(px,py,gr,0,Math.PI*2);ctx.fillStyle=og;ctx.fill();
+
+      // Bright core
+      ctx.beginPath();ctx.arc(px,py,pulsing?4:2.8,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,.85)';ctx.fill();
+      ctx.beginPath();ctx.arc(px,py,pulsing?2.5:1.8,0,Math.PI*2);
+      ctx.fillStyle=pal.pk;ctx.fill();
+    }
+
+    // Nodes
+    NODES.forEach(node=>{
+      node.phase+=node.speed;
+      node.active=Math.max(0,node.active-.013);
+      const pulse=.5+.5*Math.sin(node.phase);
+      const boost=pulsing?.25:0;
+      const r=node.r*(1+.35*pulse+node.active*.7+boost);
+      const gr=r*(3.5+effAct*5+node.active*4);
+
+      const g2=ctx.createRadialGradient(node.x,node.y,0,node.x,node.y,gr);
+      g2.addColorStop(0,pal.glow);g2.addColorStop(1,'transparent');
+      ctx.beginPath();ctx.arc(node.x,node.y,gr,0,Math.PI*2);ctx.fillStyle=g2;ctx.fill();
+
+      ctx.beginPath();ctx.arc(node.x,node.y,r,0,Math.PI*2);
+      ctx.fillStyle=pal.node;
+      ctx.globalAlpha=.45+.55*pulse+node.active*.5;
+      ctx.fill();ctx.globalAlpha=1;
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ─── SPEECH RECOGNITION ──────────────────────────────────────
+// One persistent instance — never destroyed — continuous=true
+// awake + conversing flags gate all processing
+function initRecognizer(){
+  if(!hasSR){sysLog('⚠️ Use Chrome for voice');return;}
+  rec=new SR();
+  rec.continuous=true;rec.interimResults=true;rec.maxAlternatives=3;rec.lang='en-US';
+
+  rec.onstart=()=>{
+    recRunning=true;
+    if(!muted) setState('wake');
+    sysLog('Mic open — say Simon to activate');
+  };
+
+  // Block ALL speech input while SIMON is speaking — prevents mic picking up TTS
+  rec.onspeechstart=()=>{
+    if(appState==='speaking') return; // ignore — SIMON is talking
+    if(awake) setState('listening');
+  };
+
+  rec.onresult=(e)=>{
+    // Hard gate: never process speech while SIMON is talking or processing.
+    // This is the primary fix for the "jumping ahead" bug.
+    // TTS audio bleeds into the mic and queues up results. We discard all of them.
+    if(appState==='speaking'||appState==='processing') return;
+
+    let interim='', finalText='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal){
+        for(let a=0;a<e.results[i].length;a++){
+          const tr=e.results[i][a].transcript.toLowerCase().trim();
+          const conf=e.results[i][a].confidence||0;
+
+          // Kill phrase check — exits conversation mode
+          if(conversing && KILL_PHRASES.some(p=>tr.includes(p))){
+            endConversation();
+            sysLog('⏸ Conversation paused — say Simon to resume');
+            return;
+          }
+
+          // Wake word — only needed when NOT conversing
+          if(!conversing && tr.includes('simon') && (conf===0||conf>=wakeThresh)){
+            if(!awake && appState!=='processing' && appState!=='speaking'){
+              awake=true;conversing=true;
+              setState('listening');
+              sysLog('Simon activated — conversation mode ON');
+              resetAwakeTimer();resetConvTimer();
+            }
+            break;
+          }
+
+          // Already conversing — auto-wake on any speech
+          if(conversing && !awake && appState!=='processing' && appState!=='speaking'){
+            awake=true;setState('listening');
+          }
+        }
+        finalText+=e.results[i][0].transcript;
+      } else {
+        interim+=e.results[i][0].transcript;
+      }
+    }
+
+    if(awake && interim) document.getElementById('interim-txt').textContent=interim;
+
+    if(awake && finalText.trim()){
+      const cmd=finalText.trim().replace(/^simon[,.]?\s*/i,'').trim();
+      if(cmd.length>1){
+        clearAwakeTimer();
+        awake=false;
+        resetConvTimer();
+        document.getElementById('interim-txt').textContent='';
+        setState('processing');
+        sendMessage(cmd);
+      }
+    }
+  };
+
+  rec.onspeechend=()=>{
+    if(awake) setTimeout(()=>{
+      if(awake && appState==='listening'){
+        sysLog('No command detected — monitoring');
+        awake=false;
+        if(!muted) setState('wake');
+      }
+    },1200);
+  };
+
+  rec.onerror=(e)=>{
+    if(e.error==='not-allowed'||e.error==='service-not-allowed'){
+      setState('sleeping');
+      sysLog('⚠️ Mic blocked — allow in Chrome for localhost:8765');
+      recRunning=false;return;
+    }
+    if(e.error==='no-speech') return;
+    // aborted = Chrome stopped SR because tab lost focus. onend will fire next.
+    // Do NOT log spam — just let onend handle the restart decision.
+    if(e.error==='aborted') return;
+    sysLog('SR error: '+e.error);
+  };
+
+  rec.onend=()=>{
+    recRunning=false;
+    if(muted) return;
+    // Only restart if the tab is actually visible and focused.
+    // If not, the visibilitychange/focus listeners will restart when ready.
+    if(document.visibilityState==='visible'&&document.hasFocus()){
+      setTimeout(startRec,600);
+    }
+  };
+}
+
+function startRec(){
+  if(!rec||recRunning||muted) return;
+  // Chrome aborts SR instantly when tab is hidden or unfocused.
+  // Don't start — visibilitychange/focus listeners will resume us.
+  if(document.visibilityState!=='visible'||!document.hasFocus()) return;
+  try{rec.start();recRunning=true;}
+  catch(e){
+    if(e.name==='InvalidStateError') return; // already running, ignore
+    sysLog('SR start: '+e.message);
+    setTimeout(startRec,1500);
+  }
+}
+
+// Resume SR automatically when tab comes back into view/focus
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible'&&!muted&&!recRunning){
+    sysLog('Tab visible — resuming mic');
+    setTimeout(startRec,400);
+  }
+});
+window.addEventListener('focus',()=>{
+  if(!muted&&!recRunning){
+    sysLog('Tab focused — resuming mic');
+    setTimeout(startRec,400);
+  }
+});
+
+// Awake timer — 12s auto-reset if no command
+function resetAwakeTimer(){
+  clearAwakeTimer();
+  awakeTimer=setTimeout(()=>{
+    if(awake){awake=false;sysLog('Wake timeout');if(!muted&&appState!=='processing'&&appState!=='speaking') setState('wake');}
+  },12000);
+}
+function clearAwakeTimer(){if(awakeTimer){clearTimeout(awakeTimer);awakeTimer=null;}}
+
+// Conversation timer — 90s idle exits conversation mode
+function resetConvTimer(){
+  clearConvTimer();
+  convTimer=setTimeout(()=>{
+    if(conversing){sysLog('⏰ Conversation idle — back to monitoring');endConversation();}
+  },90000);
+}
+function clearConvTimer(){if(convTimer){clearTimeout(convTimer);convTimer=null;}}
+
+function endConversation(){
+  conversing=false;awake=false;
+  clearConvTimer();clearAwakeTimer();
+  if(!muted&&appState!=='processing'&&appState!=='speaking') setState('wake');
+}
+
+function toggleMute(){
+  muted=!muted;
+  const btn=document.getElementById('mute-btn');
+  if(muted){
+    awake=false;conversing=false;
+    clearAwakeTimer();clearConvTimer();
+    setState('muted');btn.textContent='UNMUTE';
+    sysLog('Muted');
+    if(rec&&recRunning) try{rec.stop();}catch(e){}
+  } else {
+    btn.textContent='MUTE';
+    setState('wake');
+    sysLog('Unmuted');
+    setTimeout(startRec,200);
+  }
+}
+
+// ─── WEBSOCKET ────────────────────────────────────────────────
+function connectWS(){
+  ws=new WebSocket(WS_URL);
+  ws.onopen=()=>{
+    document.getElementById('cpill').textContent='ONLINE';
+    document.getElementById('cpill').classList.add('on');
+    sysLog('WebSocket connected');
+    startPing();
+  };
+  ws.onmessage=(ev)=>handleMsg(JSON.parse(ev.data));
+  ws.onclose=()=>{
+    document.getElementById('cpill').textContent='OFFLINE';
+    document.getElementById('cpill').classList.remove('on');
+    setState('sleeping');
+    setTimeout(connectWS,3000);
+  };
+}
+
+function handleMsg(d){
+  switch(d.type){
+    case 'stats':
+      updateStats(d.data);
+      break;
+
+    case 'greeting':
+      addMsg('a',d.text);
+      setState('speaking');
+      sysLog('SIMON online — greeting');
+      break;
+
+    case 'thinking':
+      awake=false; // discard any in-flight SR results immediately
+      setState('processing');
+      showProc('THINKING');
+      currentAiMsg=addMsg('a','');
+      currentAiMsg.innerHTML='<span class="cursor"></span>';
+      break;
+
+    case 'tool_use':
+      sysLog('⚡ Tool: '+d.tool);
+      // Update overlay label to show which tool is running
+      showProc('⚡ ' + (d.tool||'TOOL').toUpperCase().replace(/_/g,' '));
+      if(currentAiMsg){
+        currentAiMsg.innerHTML=`<span class="tool-indicator">⚡ ${d.tool}...</span><span class="cursor"></span>`;
+      }
+      break;
+
+    case 'chunk':
+      hideProc(); // response is streaming in — hide the overlay
+      if(currentAiMsg){
+        currentAiMsg.dataset.full=(currentAiMsg.dataset.full||'')+d.text;
+        currentAiMsg.innerHTML=currentAiMsg.dataset.full+'<span class="cursor"></span>';
+        scrollChat();
+      }
+      // Word pulse — brain lights up as SIMON speaks
+      if(typeof brainWordPulse==='function') brainWordPulse();
+      break;
+
+    case 'done':
+      hideProc();
+      if(currentAiMsg){
+        currentAiMsg.innerHTML=currentAiMsg.dataset.full||d.text;
+        currentAiMsg=null;
+      }
+      setState('speaking');
+      break;
+
+    case 'speech_done':
+      clearAwakeTimer();
+      if(conversing&&!muted){
+        // ── Audio-settle window ──────────────────────────────────────────
+        // SIMON's TTS just finished. The mic has been open the whole time
+        // and likely has buffered residual audio (speaker bleed, room echo).
+        // Keep awake=false and state='speaking' for 800ms so those stale
+        // SR results drain and get discarded by the onresult gate above.
+        // Then flip to LISTENING — 800ms settle window prevents mic picking up TTS.
+        sysLog('Listening for your response...');
+        setState('speaking'); // stays blocked during drain window
+        setTimeout(()=>{
+          if(!muted && conversing){
+            awake=true;
+            setState('listening'); // ← visually shows SIMON is waiting
+            resetConvTimer();
+            resetAwakeTimer();
+          }
+        }, 800);
+      } else {
+        awake=false;
+        if(!muted) setState('wake');
+        sysLog('Speech done → monitoring');
+      }
+      break;
+
+    case 'cleared':
+      document.getElementById('chat').innerHTML='';
+      conversing=false;awake=false;
+      clearConvTimer();clearAwakeTimer();
+      sysLog('Session cleared');
+      break;
+  }
+}
+
+function startPing(){
+  setInterval(()=>{if(ws?.readyState===1) ws.send(JSON.stringify({type:'ping'}));},5000);
+}
+
+function addMsg(role,text){
+  const chat=document.getElementById('chat');
+  const div=document.createElement('div');
+  div.className='msg '+role;
+  div.textContent=text;
+  chat.appendChild(div);
+  chat.scrollTop=chat.scrollHeight;
+  return div;
+}
+function scrollChat(){
+  const c=document.getElementById('chat');c.scrollTop=c.scrollHeight;
+}
+function sendMessage(text){
+  if(!ws||ws.readyState!==1){sysLog('WS not ready');if(!muted) setState('wake');return;}
+  addMsg('u',text);
+  ws.send(JSON.stringify({type:'chat',text}));
+  sysLog('→ '+text.slice(0,50));
+}
+function sendText(){
+  const inp=document.getElementById('inp'),text=inp.value.trim();
+  if(!text) return;
+  inp.value='';
+  awake=false;clearAwakeTimer();
+  resetConvTimer();
+  setState('processing');
+  sendMessage(text);
+}
+function clearSession(){
+  if(ws) ws.send(JSON.stringify({type:'clear'}));
+}
+
+// ─── PROCESSING OVERLAY ───────────────────────────────────────────
+const _procEl  = document.getElementById('proc-overlay');
+const _procLbl = document.getElementById('proc-label');
+const _procBar = document.getElementById('proc-bar');
+
+function showProc(label){
+  _procLbl.innerHTML = (label||'PROCESSING') + '<span id="proc-dots"></span>';
+  // Reset the grow animation by removing and re-adding the element
+  _procBar.style.animation = 'none';
+  void _procBar.offsetWidth; // force reflow
+  _procBar.style.animation = '';
+  _procEl.classList.add('active');
+}
+function hideProc(){
+  _procEl.classList.remove('active');
+}
+
+// ─── UPTIME COUNTER ─────────────────────────────────────────
+const _simonStart = Date.now();
+function updateUptime(){
+  const sec = Math.floor((Date.now()-_simonStart)/1000);
+  const h = String(Math.floor(sec/3600)).padStart(2,'0');
+  const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+  const s = String(sec%60).padStart(2,'0');
+  const el = document.getElementById('uptime-val');
+  if(el) el.textContent = h+':'+m+':'+s;
+}
+setInterval(updateUptime, 1000);
+
+// ─── STATS UPDATE ─────────────────────────────────────────────
+function updateStats(d){
+  document.getElementById('dateline').textContent=d.date;
+  // CPU
+  const cpu=d.cpu;
+  document.getElementById('cpu-v').textContent=cpu+'%';
+  const cb=document.getElementById('cpu-b');
+  cb.style.width=cpu+'%';
+  cb.className='fill'+(cpu>80?' hot':'');
+  // Memory
+  const mp=Math.round((d.mem_gb/d.mem_max)*100);
+  document.getElementById('mem-v').textContent=d.mem_gb+' GB / '+d.mem_max+' GB';
+  document.getElementById('mem-b').style.width=mp+'%';
+  // Disk
+  if(d.disk_pct!=null){
+    document.getElementById('disk-v').textContent=d.disk_used+' / '+d.disk_avail;
+    const db=document.getElementById('disk-b');
+    db.style.width=d.disk_pct+'%';
+    db.className='fill'+(d.disk_pct>85?' hot':'');
+  }
+  // Network IP
+  if(d.ip){ const ip=document.getElementById('net-ip'); if(ip) ip.textContent=d.ip; }
+  // Load average
+  if(d.load){ const lv=document.getElementById('load-val'); if(lv) lv.textContent=d.load; }
+  // Log vitals to activity log every 30s (throttled)
+  const _now = Date.now();
+  if(!updateStats._lastLog || _now - updateStats._lastLog > 30000){
+    updateStats._lastLog = _now;
+    console.info(`vitals │ CPU:${d.cpu}% MEM:${d.mem_gb}/${d.mem_max}GB DISK:${d.disk_used} LOAD:${d.load||'--'}`);
+  }
+}
+
+// ─── CALENDAR ────────────────────────────────────────────────
+async function loadCalendar(){
+  try{
+    const r=await fetch('/api/calendar');
+    const evts=await r.json();
+    const el=document.getElementById('cal');
+    if(!evts.length){
+      el.innerHTML='<div class="cal-empty">No events today</div>';return;
+    }
+    el.innerHTML=evts.slice(0,4).map(e=>`
+      <div class="cal-item">
+        <div class="cal-time">${e.time}</div>
+        <div>${e.title}</div>
+      </div>`).join('');
+  }catch(e){console.warn('Calendar load failed',e);}
+}
+
+// ─── EMAILS ──────────────────────────────────────────────────
+async function loadEmails(){
+  try{
+    const r=await fetch('/api/emails');
+    const d=await r.json();
+    // Email counts now rendered dynamically from /api/emails response
+    document.getElementById('e-gm').textContent=d.personal!=null?d.personal:'--';
+    // (account names vary per user — see updateEmails())
+    document.getElementById('e-ic').textContent=d.icloud!=null?d.icloud:'--';
+  }catch(e){}
+}
+
+// ─── BOOT ────────────────────────────────────────────────────
+if(hasSR){
+  initRecognizer();
+  sysLog('S.I.M.O.N. v4.2 — online');
+  sysLog('Model: Mistral Large | Voice: Piper Alan');
+  sysLog('Conversation mode ON | Kill phrase to pause');
+  sysLog('Say "Simon" to wake');
+} else {
+  sysLog('⚠️ Use Chrome or Safari for voice input');
+  setState('sleeping');
+}
+
+connectWS();
+loadCalendar();
+loadEmails();
+setInterval(loadEmails, 90000);
+setTimeout(()=>{ if(!muted) startRec(); }, 2500);
+</script>
+</body>
+</html>

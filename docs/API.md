@@ -28,11 +28,11 @@ Returns current system vitals.
   "date": "Saturday, March 14, 2026",
   "cpu": 18.5,
   "mem_gb": 14.2,
-  "mem_max": 24,
+  "mem_max": 16,
   "disk_used": "12G",
-  "disk_avail": "911G",
+  "disk_avail": "450G",
   "disk_pct": 2,
-  "ip": "10.0.0.103",
+  "ip": "10.0.0.X",
   "load": "2.10 / 2.30 / 2.40"
 }
 ```
@@ -169,11 +169,11 @@ System vitals update. Sent every ~5 seconds.
     "date": "Saturday, March 14, 2026",
     "cpu": 18.5,
     "mem_gb": 14.2,
-    "mem_max": 24,
+    "mem_max": 16,
     "disk_used": "12G",
-    "disk_avail": "911G",
+    "disk_avail": "450G",
     "disk_pct": 2,
-    "ip": "10.0.0.103",
+    "ip": "10.0.0.X",
     "load": "2.10 / 2.30 / 2.40"
   }
 }

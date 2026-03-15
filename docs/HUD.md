@@ -22,9 +22,9 @@ Open at: `http://localhost:8765`
 │ DISK  12/911 │    ◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉           │              │
 │              │       ◉◉◉◉◉◉◉◉◉◉◉◉◉             │ // ACTIVITY  │
 │ // INBOX     │         ◉◉◉◉◉◉◉◉◉               │ LOG          │
-│ SimonX    45 │                                   │              │
-│ Personal 347 │         M O N I T O R I N G       │              │
-│ Fixit     13 │         SAY "SIMON" TO ACTIVATE   │              │
+│ Work      12 │                                   │              │
+│ Personal  45 │         M O N I T O R I N G       │              │
+│ Other      3 │         SAY "SIMON" TO ACTIVATE   │              │
 │ iCloud     0 │                                   │              │
 │              │   ┌────────────────────────────┐  │              │
 │ // SYSTEMS   │   │ S.I.M.O.N.                 │  │              │

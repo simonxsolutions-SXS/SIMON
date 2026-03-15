@@ -127,7 +127,7 @@ CREATE TABLE memory (
 PERSISTENT MEMORY (stored locally, survives all restarts):
 [person] wife_contact: Jane
 [preference] trading_platform: your preferred platform
-[fact] machine_specs: MacBook Air, 24GB RAM, 1TB
+[fact] machine_specs: MacBook Air, 16GB RAM, 512GB
 ```
 
 **Via voice:**
@@ -232,7 +232,7 @@ Running self-healing maintenance...
 [KB MAINTENANCE] Contacts deduped: 0 duplicates removed
 [KB MAINTENANCE] Old sessions pruned: 3
 [KB MAINTENANCE] VACUUM complete
-[KB MAINTENANCE] Final: 112.0KB | 167 contacts | 0 messages | 16 memory
+[KB MAINTENANCE] Final: 96.0KB | 142 contacts | 0 messages | 5 memory
 ```
 
 ---

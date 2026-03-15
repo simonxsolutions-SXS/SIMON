@@ -225,7 +225,7 @@ Reports current system health.
 
 **Returns:**
 ```
-CPU: 18.5% | RAM: 14.2GB / 24GB | Disk: 12G used, 911G free (2%)
+CPU: 18.5% | RAM: 10.2GB / 16GB | Disk: 12G used, 450G free (3%)
 ```
 
 **When used:** "System check" / "How's the machine running?" / "What's my CPU usage?"

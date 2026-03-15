@@ -137,9 +137,9 @@ python3.11 simon_kb.py sync --force
 Expected output:
 ```
 ✅ KB initialized — /Users/YOU/.simon-x/simon_kb.db
-  contacts     167 upserted
-  messages     12 new
-  167 contacts | 12 messages | 0 memory | 112.0 KB
+  contacts     142 upserted
+  messages     8 new
+  142 contacts | 8 messages | 0 memory | 96.0 KB
 ```
 
 ### Seed Your Memory (optional but recommended)
@@ -304,9 +304,9 @@ Expected API status response:
   "date": "Saturday, March 14, 2026",
   "cpu": 18.5,
   "mem_gb": 14.2,
-  "mem_max": 24,
+  "mem_max": 16,
   "disk_used": "12G",
-  "disk_avail": "911G",
+  "disk_avail": "450G",
   "disk_pct": 2,
   "ip": "10.0.0.1",
   "load": "2.1 / 2.3 / 2.4"

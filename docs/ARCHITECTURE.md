@@ -246,11 +246,11 @@ Every session starts with all `memory` table entries injected into the system pr
 PERSISTENT MEMORY (stored locally, survives all restarts):
 [person] wife_contact: [name from contacts]
 [preference] trading_platform: your preferred platform
-[fact] machine_specs: MacBook Air, 24GB RAM, 1TB
+[fact] machine_specs: MacBook Air, 16GB RAM, 512GB
 ...
 ```
 
-This means SIMON walks into every conversation already knowing everything you've ever told him.
+This means SIMON walks into every conversation already knowing everything you've ever told it.
 
 ---
 

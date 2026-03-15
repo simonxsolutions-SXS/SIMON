@@ -133,7 +133,7 @@ stateDiagram-v2
     [*] --> Startup
 
     Startup --> ContactSync: sync_contacts()
-    ContactSync --> ContactsCache: 167 unique persons\none row per person
+    ContactSync --> ContactsCache: N unique persons\none row per person
     ContactsCache --> [*]: Permanent until next sync
 
     Startup --> MessageSync: sync_messages(hours_back=48)
