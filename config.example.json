@@ -1,0 +1,33 @@
+{
+  "ollama_cloud_url": "https://api.ollama.com",
+  "ollama_cloud_key": "KEYCHAIN",
+  "model": "mistral-large-3:675b",
+  "tts_voice": "Reed (English (UK))",
+  "tts_rate": 168,
+  "port": 8765,
+  "owner_name": "Your Name",
+  "owner_first": "Alex",
+  "owner_title": "Mr.",
+  "company": "Your Company",
+  "notification_phone": "+1XXXXXXXXXX",
+  "owner_email": "your@email.com",
+  "trusted_contacts": [
+    "+1XXXXXXXXXX",
+    "your@email.com"
+  ],
+  "_tailscale_note": "Use MagicDNS hostnames when possible. Replace IPs with <hostname>.<tailnet>.ts.net for resilience.",
+  "lm_studio_url": "http://YOUR_HQ_TAILSCALE_HOST:1234",
+  "hq_api_url": "http://YOUR_HQ_TAILSCALE_HOST:8200",
+  "hq_api_url_fallback": "http://YOUR_HQ_TAILSCALE_IP:8200",
+  "hq_api_key": "KEYCHAIN",
+  "hq_model": "qwen2.5:7b",
+  "nova_tailscale_host": "YOUR_HQ_HOSTNAME",
+  "android": {
+    "enabled": true,
+    "adb_host": "YOUR_ANDROID_LOCAL_IP",
+    "adb_host_tailscale": "YOUR_ANDROID_TAILSCALE_IP",
+    "adb_port": 5555,
+    "device_name": "Your Phone",
+    "note": "adb_host = home WiFi (fast), adb_host_tailscale = works from anywhere via Tailscale."
+  }
+}

@@ -1,0 +1,69 @@
+# ============================================================
+# S.I.M.O.N. / NOVA — .gitignore
+# ============================================================
+
+# ── Secrets & credentials ────────────────────────────────────
+config.json
+nova_config.json
+*.key
+*.pem
+*.p12
+*.pfx
+.env
+.env.*
+secrets.json
+keychain.json
+totp_secret*
+
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+.venv/
+env/
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Logs & runtime state ─────────────────────────────────────
+*.log
+*.log.bak.*
+jarvis.log*
+nova.log*
+*.pid
+
+# ── Databases & local data ───────────────────────────────────
+*.db
+*.sqlite
+*.sqlite3
+chroma_data/
+simon_memory/
+backups/
+
+# ── macOS ────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+
+# ── IDE / editors ────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Node / npm (if any frontend tooling) ─────────────────────
+node_modules/
+npm-debug.log*
+
+# ── Compiled / generated ─────────────────────────────────────
+*.pyc
+*.so
+*.dylib
